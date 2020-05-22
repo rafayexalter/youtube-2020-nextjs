@@ -8,7 +8,11 @@ async function setup() {
     });
 
     await db.migrate({force: true});
+
     const people = await db.all('SELECT * FROM person');
     console.log('All people', JSON.stringify(people, null, 2));
+
+    const vehicle = await db.all('SELECT * FROM vehicle');
+    console.log('All vehicle', JSON.stringify(vehicle, null, 2));
 }
 setup();

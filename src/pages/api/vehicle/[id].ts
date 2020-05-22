@@ -1,9 +1,18 @@
 import { NextApiRequest, NextApiResponse} from "next";
+const sqlite = require('sqlite');
+const sqlite3 = require('sqlite3');
 
-export default function getVehicleById(req: NextApiRequest, res: NextApiResponse)
+export default async function getVehicleById(req: NextApiRequest, res: NextApiResponse)
 {
-    if( req.method !== 'GET' ) {
-        res.status(500).json({message: 'sorry we only accept GET requests.'})
-    }
-    res.json({ byId: req.query.id, message: 'getVehicleById' })
+    const db = await sqlite.open({
+        filename: './mydb.sqlite',
+        driver: sqlite3.Database
+    });
+
+    const vehicle = await db.get(
+        'SELECT * FROM vehicle WHERE id = ?',
+        [req.query.id]
+    );
+
+    res.json(vehicle)
 }
